@@ -192,7 +192,7 @@ $resultado = $pesquisa->get_result();
 
 
                             <p class="card-text">
-                                <?php echo $teste['ds_atividade']; ?>
+                                <?php echo htmlspecialchars($teste['ds_atividade']);  ?>
                             </p>
 
                        
