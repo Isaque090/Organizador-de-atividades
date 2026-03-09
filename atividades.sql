@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 08/03/2026 às 22:19
--- Versão do servidor: 10.4.32-MariaDB
--- Versão do PHP: 8.2.12
+-- Generation Time: Mar 09, 2026 at 01:30 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,35 +18,50 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Banco de dados: `atividades`
+-- Database: `atividades`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `atividades`
+-- Table structure for table `atividades`
 --
 
 CREATE TABLE `atividades` (
-  `id` int(11) NOT NULL,
-  `ds_materia` varchar(200) NOT NULL,
-  `dt_entrega` date NOT NULL,
-  `ds_atividade` text NOT NULL
+  `cd_atividade` int(11) NOT NULL,
+  `id_materia` int(11) NOT NULL,
+  `ds_atividade` text NOT NULL,
+  `dt_entrega` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `atividades`
---
-
-INSERT INTO `atividades` (`id`, `ds_materia`, `dt_entrega`, `ds_atividade`) VALUES
-(1, 'Matemática', '2026-03-08', 'teste'),
-(2, 'teste', '2026-03-30', 'eeeeeeeeeeeeeeeeeeeeeeeeeeeee'),
-(3, 'teste  2', '2026-03-01', '          <form action=\"\" method=\"post\">\n                <label>Login</label>\n                <input class=\"form-control\" name=\"email\" type=\"text\" id=\"iiinput\" maxlength=\"20\" required>\n                 <label for=\"senha\">Senha</label>\n                 \n                 <input class=\"form-control\" name=\"senha\" type=\"password\" id=\"iiinput\" maxlength=\"20\" required>\n                <button name=\"login\" id=\"botao\" class=\"botao\" type=\"submit\">Começar</button>\n            </form>');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `usuarios`
+-- Table structure for table `atividades_usuarios`
+--
+
+CREATE TABLE `atividades_usuarios` (
+  `cd_atividade_usuario` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_atividade` int(11) NOT NULL,
+  `st_status` enum('pendente','feito') NOT NULL DEFAULT 'pendente'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `materias`
+--
+
+CREATE TABLE `materias` (
+  `cd_materia` int(11) NOT NULL,
+  `nm_materia` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `usuarios`
 --
 
 CREATE TABLE `usuarios` (
@@ -58,44 +73,88 @@ CREATE TABLE `usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `usuarios`
+-- Dumping data for table `usuarios`
 --
 
 INSERT INTO `usuarios` (`id`, `nm_nome`, `ds_senha`, `st_nivel`, `ds_email`) VALUES
 (1, 'isaque', 'teste', 'admin', 'isaque@gmail.com');
 
 --
--- Índices para tabelas despejadas
+-- Indexes for dumped tables
 --
 
 --
--- Índices de tabela `atividades`
+-- Indexes for table `atividades`
 --
 ALTER TABLE `atividades`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`cd_atividade`),
+  ADD KEY `idx_materia` (`id_materia`);
 
 --
--- Índices de tabela `usuarios`
+-- Indexes for table `atividades_usuarios`
+--
+ALTER TABLE `atividades_usuarios`
+  ADD PRIMARY KEY (`cd_atividade_usuario`),
+  ADD KEY `idusuario` (`id_usuario`),
+  ADD KEY `idatividade` (`id_atividade`);
+
+--
+-- Indexes for table `materias`
+--
+ALTER TABLE `materias`
+  ADD PRIMARY KEY (`cd_materia`);
+
+--
+-- Indexes for table `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `ds_email` (`ds_email`);
 
 --
--- AUTO_INCREMENT para tabelas despejadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de tabela `atividades`
+-- AUTO_INCREMENT for table `atividades`
 --
 ALTER TABLE `atividades`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `cd_atividade` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `usuarios`
+-- AUTO_INCREMENT for table `atividades_usuarios`
+--
+ALTER TABLE `atividades_usuarios`
+  MODIFY `cd_atividade_usuario` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `materias`
+--
+ALTER TABLE `materias`
+  MODIFY `cd_materia` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `usuarios`
 --
 ALTER TABLE `usuarios`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `atividades`
+--
+ALTER TABLE `atividades`
+  ADD CONSTRAINT `relacaoMateriaAtividade` FOREIGN KEY (`id_materia`) REFERENCES `materias` (`cd_materia`);
+
+--
+-- Constraints for table `atividades_usuarios`
+--
+ALTER TABLE `atividades_usuarios`
+  ADD CONSTRAINT `idatividade` FOREIGN KEY (`id_atividade`) REFERENCES `atividades` (`cd_atividade`),
+  ADD CONSTRAINT `idusuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
