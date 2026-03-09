@@ -1,8 +1,8 @@
 <?php
 include_once('config.php');
 
-$pesquisa = $conexao->prepare("SELECT * FROM atividades ORDER BY dt_entrega asc ");
 
+$pesquisa = $conexao->prepare("SELECT  cd_atividade, ds_atividade, dt_entrega, (SELECT nm_materia FROM materias WHERE cd_materia = atividades.id_materia ) AS nm_materia FROM atividades ORDER BY dt_entrega asc ");
 $pesquisa->execute();
 $resultado = $pesquisa->get_result();
 
@@ -165,7 +165,7 @@ $resultado = $pesquisa->get_result();
                     <div class="card">
 
                         <div class="card-header d-flex justify-content-between align-items-center <?php echo $heder; ?>">
-                            <span> <?php echo $teste['ds_materia']; ?></span>
+                            <span> <?php echo $teste['nm_materia']; ?></span>
                             <span class="badge  <?php echo $badge; ?>"> <?php echo $textoBadge; ?></span>
                         </div>
 
