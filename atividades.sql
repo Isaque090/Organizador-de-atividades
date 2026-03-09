@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 09, 2026 at 01:30 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: sql311.infinityfree.com
+-- Tempo de geração: 09/03/2026 às 13:53
+-- Versão do servidor: 11.4.10-MariaDB
+-- Versão do PHP: 7.2.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -18,13 +19,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `atividades`
+-- Banco de dados: `if0_41347191_atividades`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `atividades`
+-- Estrutura para tabela `atividades`
 --
 
 CREATE TABLE `atividades` (
@@ -37,7 +38,7 @@ CREATE TABLE `atividades` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `atividades_usuarios`
+-- Estrutura para tabela `atividades_usuarios`
 --
 
 CREATE TABLE `atividades_usuarios` (
@@ -50,7 +51,7 @@ CREATE TABLE `atividades_usuarios` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `materias`
+-- Estrutura para tabela `materias`
 --
 
 CREATE TABLE `materias` (
@@ -58,10 +59,30 @@ CREATE TABLE `materias` (
   `nm_materia` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Despejando dados para a tabela `materias`
+--
+
+INSERT INTO `materias` (`cd_materia`, `nm_materia`) VALUES
+(1, 'Matemática'),
+(2, 'História'),
+(3, 'Geografia'),
+(4, 'Física'),
+(5, 'Química'),
+(6, 'Educação Física'),
+(7, 'Portugues'),
+(8, 'Inglês'),
+(9, 'Banco de Dados II'),
+(10, 'Programação Web II'),
+(11, 'Desenvolvimento de Sistemas'),
+(12, 'Programação de Aplicativos Mobile'),
+(13, 'Biologia'),
+(14, 'Ética e Cidadania Organizacional');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `usuarios`
+-- Estrutura para tabela `usuarios`
 --
 
 CREATE TABLE `usuarios` (
@@ -73,25 +94,25 @@ CREATE TABLE `usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `usuarios`
+-- Despejando dados para a tabela `usuarios`
 --
 
 INSERT INTO `usuarios` (`id`, `nm_nome`, `ds_senha`, `st_nivel`, `ds_email`) VALUES
 (1, 'isaque', 'teste', 'admin', 'isaque@gmail.com');
 
 --
--- Indexes for dumped tables
+-- Índices de tabelas apagadas
 --
 
 --
--- Indexes for table `atividades`
+-- Índices de tabela `atividades`
 --
 ALTER TABLE `atividades`
   ADD PRIMARY KEY (`cd_atividade`),
   ADD KEY `idx_materia` (`id_materia`);
 
 --
--- Indexes for table `atividades_usuarios`
+-- Índices de tabela `atividades_usuarios`
 --
 ALTER TABLE `atividades_usuarios`
   ADD PRIMARY KEY (`cd_atividade_usuario`),
@@ -99,58 +120,58 @@ ALTER TABLE `atividades_usuarios`
   ADD KEY `idatividade` (`id_atividade`);
 
 --
--- Indexes for table `materias`
+-- Índices de tabela `materias`
 --
 ALTER TABLE `materias`
   ADD PRIMARY KEY (`cd_materia`);
 
 --
--- Indexes for table `usuarios`
+-- Índices de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `ds_email` (`ds_email`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de tabelas apagadas
 --
 
 --
--- AUTO_INCREMENT for table `atividades`
+-- AUTO_INCREMENT de tabela `atividades`
 --
 ALTER TABLE `atividades`
   MODIFY `cd_atividade` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `atividades_usuarios`
+-- AUTO_INCREMENT de tabela `atividades_usuarios`
 --
 ALTER TABLE `atividades_usuarios`
   MODIFY `cd_atividade_usuario` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `materias`
+-- AUTO_INCREMENT de tabela `materias`
 --
 ALTER TABLE `materias`
-  MODIFY `cd_materia` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cd_materia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT for table `usuarios`
+-- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- Constraints for dumped tables
+-- Restrições para dumps de tabelas
 --
 
 --
--- Constraints for table `atividades`
+-- Restrições para tabelas `atividades`
 --
 ALTER TABLE `atividades`
   ADD CONSTRAINT `relacaoMateriaAtividade` FOREIGN KEY (`id_materia`) REFERENCES `materias` (`cd_materia`);
 
 --
--- Constraints for table `atividades_usuarios`
+-- Restrições para tabelas `atividades_usuarios`
 --
 ALTER TABLE `atividades_usuarios`
   ADD CONSTRAINT `idatividade` FOREIGN KEY (`id_atividade`) REFERENCES `atividades` (`cd_atividade`),
