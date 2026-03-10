@@ -183,10 +183,8 @@ $resultado = $pesquisa->get_result();
                             </div>
 
                             <div class="card-footer">
-                                <button class="btn btn-outline-danger btn-sm">
-                                    <i class="bi bi-envelope"></i> Enviar e-mail
-                                </button>
-                                <button class="btn btn-outline-success btn-sm">
+                             
+                                <button class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#Embreve">
                                     Entregar
                                 </button>
                             </div>
@@ -204,6 +202,32 @@ $resultado = $pesquisa->get_result();
         </div>
     </main>
 
+    
+
+<div class="modal fade" id="Embreve" tabindex="-1" role="dialog" aria-labelledby="EmBreveLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="EmBreveLabel">Função em breve</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <i class="bi bi-clock-history" style="font-size: 3.5rem; color: #ffc107;"></i>
+                <h4 class="mt-3 mb-3">Em desenvolvimento...</h4>
+                <p class="text-muted">
+                    A funcionalidade de entregas de atividades ainda não está disponível.<br>
+                    Estamos trabalhando para liberar em breve!
+                </p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary px-5" data-dismiss="modal">Entendi</button>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
