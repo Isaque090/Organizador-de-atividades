@@ -1,9 +1,48 @@
 <?php
+
+session_start();
 include_once('config.php');
+if ((!isset($_SESSION['email']) == true) and (!isset($_SESSION['senha']) == true)) {
+    unset($_SESSION['email']);
+    unset($_SESSION['senha']);
+    unset($_SESSION['id']);
+    header('location:login.php');
+}
+
+
 
 $pesquisa = $conexao->prepare("SELECT cd_atividade, ds_atividade, dt_entrega, (SELECT nm_materia FROM materias WHERE cd_materia = atividades.id_materia ) AS nm_materia FROM atividades ORDER BY dt_entrega asc ");
 $pesquisa->execute();
 $resultado = $pesquisa->get_result();
+
+$id=$_SESSION['id'];
+
+if(isset($_POST['entrega'])){
+$id_atividade=$_POST['id_atividade'];
+
+$verifica = $conexao->prepare("SELECT * FROM atividades_usuarios WHERE id_usuario = ? AND id_atividade = ?");
+$verifica->bind_param("ii", $id, $id_atividade);
+$verifica->execute();
+$result = $verifica->get_result();
+if($result->num_rows == 0){
+$entrega=$conexao->prepare("INSERT INTO `atividades_usuarios` ( `id_usuario`, `id_atividade`, `st_status`) VALUES (?, ?, 'feito')");
+    $entrega->bind_param("ii", $id, $id_atividade);
+    $entrega->execute();
+      header("Location: " . $_SERVER['PHP_SELF']);
+
+    exit;
+}
+else{
+    //adicior uma mensagem melhor,esta esta so  para teste
+    echo "<script>
+ $(document).ready(function(){
+    $('#myModal').modal('show');
+});
+
+</script>";
+}
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -111,9 +150,9 @@ $resultado = $pesquisa->get_result();
                             Mais
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Blog</a>
+                            <a class="dropdown-item" href="logout.php">sair</a>
                             <a class="dropdown-item" href="#">Contato</a>
-                            <div class="dropdown-divider"></div>
+                    
                             <a class="dropdown-item" href="#">Algo mais</a>
                         </div>
                     </li>
@@ -183,10 +222,13 @@ $resultado = $pesquisa->get_result();
                             </div>
 
                             <div class="card-footer">
-                             
-                                <button class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#Embreve">
+                             <form action="" method="post">
+                              
+                            <input type="hidden" class="form-control" value="<?= $teste['cd_atividade'] ?>" name="id_atividade" required>
+                                <button class="btn btn-outline-success btn-sm" type="submit" name="entrega">
                                     Entregar
                                 </button>
+                                </form>
                             </div>
 
                         </div>
@@ -204,7 +246,7 @@ $resultado = $pesquisa->get_result();
 
     
 
-<div class="modal fade" id="Embreve" tabindex="-1" role="dialog" aria-labelledby="EmBreveLabel" aria-hidden="true">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="EmBreveLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-warning text-dark">
@@ -227,16 +269,11 @@ $resultado = $pesquisa->get_result();
         </div>
     </div>
 </div>
+
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 
 </html>

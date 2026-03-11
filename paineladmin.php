@@ -514,7 +514,7 @@ $resultadousuarios = $usuarios->get_result();
             <div class="usuarios row">
                 <h1>Gerenciamento de Usuários</h1>
 
-                <button class="criar-usuario btn btn-primary">Criar Usuario</button>
+                <button class="criar-usuario btn btn-primary">Criar Usuario <i class="bi bi-person-fill"></i></button>
             </div>
 
             <hr>
@@ -708,6 +708,60 @@ $resultadousuarios = $usuarios->get_result();
             </div>
         </div>
     </div>
+
+    
+
+    <div class="modal fade" id="adicionarusuario">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Adicionar Novo Usuario</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="">
+
+                        <div class="form-group">
+                            <label>Data de Entrega</label>
+                            <input class="form-control" name="data" type="date" min="2026-01-01" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Descrição da atividade</label>
+
+                            <textarea name="des_atividade" class="form-control" rows="10" cols="38" required></textarea>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label>Materia</label>
+                            <select class="form-control" name="categoria" required>
+                                <option value="">Selecione</option>
+                                <?php
+
+
+
+
+                                while ($materia = $resultadomateria->fetch_assoc()): ?>
+
+                                    <option value="<?= $materia['cd_materia'] ?>"> <?= $materia['nm_materia'] ?></option>
+                                <?php endwhile; ?>
+
+
+                            </select>
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" name="adicionar_tarefa" class="btn btn-success">Adicionar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
