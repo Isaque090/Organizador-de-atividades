@@ -10,8 +10,10 @@ $resultado = $pesquisa->get_result();
 
 $atrasadas = 0;
 $vencemHoje = 0;
-
+$admin = 0;
+$entregasHoje = 0;
 $hoje = date('Y-m-d');
+
 
 if ($resultado->num_rows > 0) {
 
@@ -59,25 +61,25 @@ if (isset($_POST['adicionar_tarefa'])) {
 }
 
 
-if (isset($_POST['atualizar_tarefa'])){
- $materia = $_POST['categoria'];
+if (isset($_POST['atualizar_tarefa'])) {
+    $materia = $_POST['categoria'];
     $atividade = $_POST['des_atividade'];
     $dataEntrega = $_POST['data'];
-    $cd_atividade=$_POST['id'];
+    $cd_atividade = $_POST['id'];
 
     $inserir = $conexao->prepare("     UPDATE `atividades` SET `id_materia`= ? ,`ds_atividade`= ?,`dt_entrega`= ? WHERE `cd_atividade`= ? LIMIT 1");
-    $inserir->bind_param("issi", $materia, $atividade, $dataEntrega,$cd_atividade);
+    $inserir->bind_param("issi", $materia, $atividade, $dataEntrega, $cd_atividade);
     $inserir->execute();
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
 }
 
 
-if (isset($_POST['confirmar_exclusao'])){
+if (isset($_POST['confirmar_exclusao'])) {
 
-    $cd_atividade=$_POST['atividade_id'];
+    $cd_atividade = $_POST['atividade_id'];
 
-    $inserir = $conexao->prepare("DELETE FROM atividades WHERE `atividades`.`cd_atividade` =? LIMIT 1" );
+    $inserir = $conexao->prepare("DELETE FROM atividades WHERE `atividades`.`cd_atividade` =? LIMIT 1");
     $inserir->bind_param("i", $cd_atividade);
     $inserir->execute();
     header("Location: " . $_SERVER['PHP_SELF']);
@@ -89,11 +91,37 @@ $usuarios = $conexao->prepare("SELECT * FROM `usuarios`");
 $usuarios->execute();
 $resultadousuarios = $usuarios->get_result();
 
+if ($resultadousuarios->num_rows > 0) {
+    while ($pesq_admin = $resultadousuarios->fetch_assoc()) {
+        if ($pesq_admin['st_nivel'] == "admin") {
+            $admin++;
+        }
+      
+    }
+    $resultadousuarios->data_seek(0);
+
+}
 
 
 
 
+$atividadesEntregues = $conexao->prepare("SELECT * FROM `atividades_usuarios`");
+$atividadesEntregues ->execute();
+$resultadoAtividades = $atividadesEntregues ->get_result();
 
+
+if ($resultadoAtividades->num_rows > 0) {
+    while ($pesq_entregas = $resultadoAtividades->fetch_assoc()) {
+       
+        $Hoje = date('Y-m-d');
+        $dt_entrega=$pesq_entregas['dt_entrega'];
+        if ( $dt_entrega == $Hoje) {
+            $entregasHoje++;
+        }
+    }
+    $resultadoAtividades->data_seek(0);
+
+}
 
 
 ?><!DOCTYPE html>
@@ -373,11 +401,10 @@ $resultadousuarios = $usuarios->get_result();
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        
     </style>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
-         
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
@@ -442,7 +469,7 @@ $resultadousuarios = $usuarios->get_result();
 
                             <!-- Sera feito a implementação depois de colocar  a função de entregar -->
                             <h5>Entregas Hoje</h5>
-                            <h2>10</h2>
+                            <h2><?= $entregasHoje ?></h2>
                         </div>
                     </div>
                 </div>
@@ -482,13 +509,13 @@ $resultadousuarios = $usuarios->get_result();
                                     </td>
                                     <td class="ponto"><strong><?= date('d/m/Y', strtotime($row['dt_entrega'])); ?></strong></td>
                                     <td>
-                                        <button class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deletar_atividade"
-                                            data-id="<?= htmlspecialchars($row['cd_atividade']) ?>"
-                                          >
+                                        <button class="btn btn-outline-danger btn-sm" data-toggle="modal"
+                                            data-target="#deletar_atividade"
+                                            data-id="<?= htmlspecialchars($row['cd_atividade']) ?>">
                                             <i class="material-icons" style="font-size:1rem;">delete</i> Excluir
                                         </button>
-                                        <button class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#editaratividade"
-                                            data-id="<?= $row['cd_atividade'] ?>"
+                                        <button class="btn btn-outline-warning btn-sm" data-toggle="modal"
+                                            data-target="#editaratividade" data-id="<?= $row['cd_atividade'] ?>"
                                             data-materia="<?= htmlspecialchars($row['id_materia']) ?>"
                                             data-entrega="<?= htmlspecialchars($row['dt_entrega']) ?>"
                                             data-atividade="<?= htmlspecialchars($row['ds_atividade']) ?>">
@@ -514,7 +541,7 @@ $resultadousuarios = $usuarios->get_result();
             <div class="usuarios row">
                 <h1>Gerenciamento de Usuários</h1>
 
-                <button class="criar-usuario btn btn-primary">Criar Usuario <i class="bi bi-person-fill"></i></button>
+                <button class="criar-usuario btn btn-primary">Criar Usuario</button>
             </div>
 
             <hr>
@@ -526,9 +553,9 @@ $resultadousuarios = $usuarios->get_result();
                         <h2>
 
 
-                        
-                              <?php echo  $resultadousuarios->num_rows;
-                                ?>
+
+                            <?php echo $resultadousuarios->num_rows;
+                            ?>
                         </h2>
                     </div>
                 </div>
@@ -544,11 +571,11 @@ $resultadousuarios = $usuarios->get_result();
 
 
                 <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                    <div class="total bg-success   ">
-
-
-                        <h5>Admins</h5>
-                        <h2>10</h2>
+                    <div class="total bg-success  ">
+                        <h5>Admin</h5>
+                        <h2>
+                            <?= $admin ?>
+                        </h2>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-3 mb-4">
@@ -685,7 +712,7 @@ $resultadousuarios = $usuarios->get_result();
         </div>
     </div>
 
-    
+
     <div class="modal fade" id="deletar_atividade" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -708,60 +735,6 @@ $resultadousuarios = $usuarios->get_result();
             </div>
         </div>
     </div>
-
-    
-
-    <div class="modal fade" id="adicionarusuario">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Adicionar Novo Usuario</h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <form method="post" action="">
-
-                        <div class="form-group">
-                            <label>Data de Entrega</label>
-                            <input class="form-control" name="data" type="date" min="2026-01-01" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Descrição da atividade</label>
-
-                            <textarea name="des_atividade" class="form-control" rows="10" cols="38" required></textarea>
-
-                        </div>
-
-                        <div class="form-group">
-                            <label>Materia</label>
-                            <select class="form-control" name="categoria" required>
-                                <option value="">Selecione</option>
-                                <?php
-
-
-
-
-                                while ($materia = $resultadomateria->fetch_assoc()): ?>
-
-                                    <option value="<?= $materia['cd_materia'] ?>"> <?= $materia['nm_materia'] ?></option>
-                                <?php endwhile; ?>
-
-
-                            </select>
-                        </div>
-
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" name="adicionar_tarefa" class="btn btn-success">Adicionar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -788,13 +761,13 @@ $resultadousuarios = $usuarios->get_result();
 
         });
 
-      $('#deletar_atividade').on('show.bs.modal', function (event) {
+        $('#deletar_atividade').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
             var id = button.data('id');
             var titulo = button.data('titulo');
 
             var modal = $(this);
-           
+
             modal.find('#id-modal').val(id);
         });
 

@@ -65,13 +65,14 @@ a.ds_atividade,a.dt_entrega,m.nm_materia,au.st_status FROM atividades a JOIN mat
 if (isset($_POST['entrega'])) {
     $id_atividade = $_POST['id_atividade'];
 
-    $verifica = $conexao->prepare("SELECT * FROM atividades_usuarios WHERE id_usuario = ? AND id_atividade = ?");
+    $verifica = $conexao->prepare("SELECT * FROM atividades_usuarios WHERE id_usuario = ? AND id_atividade = ?  ");
     $verifica->bind_param("ii", $id, $id_atividade);
     $verifica->execute();
     $result = $verifica->get_result();
     if ($result->num_rows == 0) {
-        $entrega = $conexao->prepare("INSERT INTO `atividades_usuarios` ( `id_usuario`, `id_atividade`, `st_status`) VALUES (?, ?, 'feito')");
-        $entrega->bind_param("ii", $id, $id_atividade);
+           $hoje = date('Y-m-d');
+        $entrega = $conexao->prepare("INSERT INTO `atividades_usuarios` ( `id_usuario`, `id_atividade`, `st_status`,dt_entrega) VALUES (?, ?, 'feito',?)");
+        $entrega->bind_param("iis", $id, $id_atividade,$hoje);
         $entrega->execute();
         header("Location: " . $_SERVER['PHP_SELF']);
 
