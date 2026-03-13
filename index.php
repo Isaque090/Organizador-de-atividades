@@ -2,7 +2,7 @@
 
 session_start();
 if (isset($_POST['filtro'])) {
-    $_SESSION['filtro'] = $_POST['filtro'];
+    $_SESSION['filtro'] = $_GET['filtro'];
 }
 $id = $_SESSION['id'];
 include_once('config.php');
@@ -22,7 +22,7 @@ $filtro_entregues = "btn-outline-success";
 $entregue = "btn-outline-success";
 $entreguetexto = "Entregar";
 
-$filtroAtual = $_SESSION['filtro'] ?? "pendentes";
+$filtroAtual = $_GET['filtro'] ?? "pendentes";
 
 if ( $filtroAtual == "todos") {
     $pesquisa = $conexao->prepare("SELECT a.cd_atividade,
@@ -260,23 +260,23 @@ if (isset($_POST['entrega'])) {
     </header>
 
     <main class="container my-4">
-        <form method="post" class="filtros">
+        <form method="get" class="filtros">
 
-            <button class="btn btn-filtro filtro <?= $filtro_todos ?>" name="filtro" value="todos">
+            <a  href="?filtro=todos" class="btn btn-filtro filtro <?= $filtro_todos ?>" name="filtro" value="todos">
                 <i class="bi bi-list"></i> Todos
-            </button>
+</a>
 
-            <button class="btn btn-filtro filtro <?= $filtro_pendente ?>" name="filtro" value="pendentes">
+            <a href="?filtro=pendentes" class="btn btn-filtro filtro <?= $filtro_pendente ?>" name="filtro" value="pendentes">
                 <i class="bi bi-clock"></i> Pendentes
-            </button>
+            </a>
 
-            <button class="btn btn-filtro filtro <?= $filtro_atrasadas ?>" name="filtro" value="atrasadas">
+            <a href="?filtro=atrasadas" class="btn btn-filtro filtro <?= $filtro_atrasadas ?>" name="filtro" value="atrasadas">
                 <i class="bi bi-exclamation-circle"></i> Atrasadas
-            </button>
+            </a>
 
-            <button class="btn btn-filtro filtro <?= $filtro_entregues ?>" name="filtro" value="entregues">
+            <a href="?filtro=entregues" class="btn btn-filtro filtro <?= $filtro_entregues ?>" name="filtro" value="entregues">
                 <i class="bi bi-check-circle"></i> Entregues
-            </button>
+            </a>
 
         </form>
         <div class="row">
