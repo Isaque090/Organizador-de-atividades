@@ -1,7 +1,9 @@
 <?php
 
 session_start();
-
+if (isset($_POST['filtro'])) {
+    $_SESSION['filtro'] = $_POST['filtro'];
+}
 $id = $_SESSION['id'];
 include_once('config.php');
 if ((!isset($_SESSION['email']) == true) and (!isset($_SESSION['senha']) == true)) {
@@ -20,7 +22,9 @@ $filtro_entregues = "btn-outline-success";
 $entregue = "btn-outline-success";
 $entreguetexto = "Entregar";
 
-if (isset($_POST['filtro']) && $_POST['filtro'] == "todos") {
+$filtroAtual = $_SESSION['filtro'] ?? "pendentes";
+
+if ( $filtroAtual == "todos") {
     $pesquisa = $conexao->prepare("SELECT a.cd_atividade,
 a.ds_atividade,a.dt_entrega,m.nm_materia,au.st_status FROM atividades a JOIN materias m ON m.cd_materia = a.id_materia LEFT JOIN atividades_usuarios au   ON au.id_atividade = a.cd_atividade    AND au.id_usuario = ? ORDER BY a.dt_entrega ASC");
 
@@ -30,16 +34,17 @@ a.ds_atividade,a.dt_entrega,m.nm_materia,au.st_status FROM atividades a JOIN mat
     $filtro_todos = "btn-primary";
 
     $contador = true;
+    $_SESSION['filtro'] = "todos";
 
 
-
-} else if (isset($_POST['filtro']) && $_POST['filtro'] == "atrasadas") {
+} else if ( $filtroAtual == "atrasadas") {
     $pesquisa = $conexao->prepare("SELECT cd_atividade, ds_atividade,  dt_entrega, (SELECT nm_materia FROM materias WHERE cd_materia = atividades.id_materia) AS nm_materia FROM atividades WHERE dt_entrega < CURDATE() AND NOT EXISTS ( SELECT 1 FROM atividades_usuarios  WHERE atividades_usuarios.id_atividade = atividades.cd_atividade AND atividades_usuarios.id_usuario = ? ) ORDER BY dt_entrega ASC");
     $pesquisa->bind_param("i", $id);
     $pesquisa->execute();
     $resultado = $pesquisa->get_result();
     $filtro_atrasadas = "btn-danger";
-} else if (isset($_POST['filtro']) && $_POST['filtro'] == "entregues") {
+    $_SESSION['filtro'] = "atrasadas";
+} else if (  $filtroAtual == "entregues") {
     $pesquisa = $conexao->prepare("SELECT a.cd_atividade, a.ds_atividade, a.dt_entrega, m.nm_materia FROM atividades a JOIN atividades_usuarios au ON au.id_atividade = a.cd_atividade JOIN materias m  ON m.cd_materia = a.id_materia WHERE au.id_usuario = ? ORDER BY a.dt_entrega ASC");
 
     $pesquisa->bind_param("i", $id);
@@ -49,6 +54,7 @@ a.ds_atividade,a.dt_entrega,m.nm_materia,au.st_status FROM atividades a JOIN mat
     $entregue = "btn-success";
     $entreguetexto = "Entregue <i class='bi bi-check-lg'></i>";
     $cor_card = true;
+    $_SESSION['filtro'] = "entregues";
 } else {
 
 
@@ -70,9 +76,9 @@ if (isset($_POST['entrega'])) {
     $verifica->execute();
     $result = $verifica->get_result();
     if ($result->num_rows == 0) {
-           $hoje = date('Y-m-d');
+        $hoje = date('Y-m-d');
         $entrega = $conexao->prepare("INSERT INTO `atividades_usuarios` ( `id_usuario`, `id_atividade`, `st_status`,dt_entrega) VALUES (?, ?, 'feito',?)");
-        $entrega->bind_param("iis", $id, $id_atividade,$hoje);
+        $entrega->bind_param("iis", $id, $id_atividade, $hoje);
         $entrega->execute();
         header("Location: " . $_SERVER['PHP_SELF']);
 
@@ -182,7 +188,7 @@ if (isset($_POST['entrega'])) {
 
         .btn-filtro {
             flex: 1 1 1;
-           
+
             min-width: 120px;
             font-weight: 500;
             border-radius: 8px;
@@ -206,17 +212,17 @@ if (isset($_POST['entrega'])) {
 
 
         .card-entregue-cinza {
-         background-color: #cce5ff;
-          
+            background-color: #cce5ff;
+
             color: #004085;
-           
+
         }
 
-       
+
 
         .badge-entregue-cinza {
             background-color: #007bff;
-           
+
             color: #fff;
         }
     </style>
@@ -285,13 +291,13 @@ if (isset($_POST['entrega'])) {
                     }
                     if (isset($cor_card) && $cor_card == true) {
 
-                        $badge = 'badge-entregue-cinza';      
-                        $textoBadge = 'Entregue';           
-                        $heder = 'card-entregue-cinza';       
+                        $badge = 'badge-entregue-cinza';
+                        $textoBadge = 'Entregue';
+                        $heder = 'card-entregue-cinza';
                         $corData = 'text-black';
 
 
-                      
+
                     } else {
                         $hoje = date('Y-m-d');
                         $dt_entrega = $teste['dt_entrega'];
@@ -319,12 +325,12 @@ if (isset($_POST['entrega'])) {
                         $entregue = "btn-success";
                         $entreguetexto = "Entregue <i class='bi bi-check-lg'></i>";
                         $entregue_estilo = true;
-                        $badge = 'badge-entregue-cinza';      
-                        $textoBadge = 'Entregue';           
-                        $heder = 'card-entregue-cinza';       
-                        $corData = 'text-black';       
-                         $texto_obs=true;   
-            
+                        $badge = 'badge-entregue-cinza';
+                        $textoBadge = 'Entregue';
+                        $heder = 'card-entregue-cinza';
+                        $corData = 'text-black';
+                        $texto_obs = true;
+
                     }
                     ?>
 
@@ -352,14 +358,13 @@ if (isset($_POST['entrega'])) {
 
 
 
-                                    }
-                                       else if (isset($texto_obs) && $texto_obs == true) {
-
-                                      
-  echo '(Atividade Já Entregue)';
+                                    } else if (isset($texto_obs) && $texto_obs == true) {
 
 
-$texto_obs =false;
+                                        echo '(Atividade Já Entregue)';
+
+
+                                        $texto_obs = false;
                                     } else {
                                         $dias = (strtotime($teste['dt_entrega']) - strtotime($hoje)) / 86400;
                                         if ($dias < 0)
