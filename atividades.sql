@@ -46,6 +46,7 @@ CREATE TABLE `atividades_usuarios` (
   `id_usuario` int(11) NOT NULL,
   `id_atividade` int(11) NOT NULL,
   `st_status` enum('pendente','feito') NOT NULL DEFAULT 'pendente'
+  `dt_entrega` DATE NULL  ;
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -93,12 +94,7 @@ CREATE TABLE `usuarios` (
   `ds_email` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `usuarios`
---
 
-INSERT INTO `usuarios` (`id`, `nm_nome`, `ds_senha`, `st_nivel`, `ds_email`) VALUES
-(1, 'isaque', 'teste', 'admin', 'isaque@gmail.com');
 
 --
 -- Índices de tabelas apagadas
