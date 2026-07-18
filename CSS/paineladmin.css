@@ -1,0 +1,265 @@
+   body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background-color: rgb(255, 255, 250);
+        }
+
+
+
+        .sidebar h2 {
+            text-align: center;
+            margin: 0 0 20px 0;
+        }
+
+        .sidebar a {
+            padding: 12px 20px;
+            text-decoration: none;
+            color: white;
+            display: block;
+            cursor: pointer;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #575757;
+            color: rgb(217, 17, 17);
+        }
+
+        .content {
+            margin-left: 220px;
+            padding: 30px;
+            flex: 1;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+
+        .secao {
+            display: none;
+        }
+
+
+        .secao.ativa {
+            display: block;
+        }
+
+        .licao {
+
+            background-color: rgb(13, 110, 253);
+
+        }
+
+
+
+        .total h5 {
+            margin-top: 10px;
+        }
+
+        .total h3 {
+            margin-top: 70px;
+
+        }
+
+        .total:hover {
+            transform: translateY(-10px);
+        }
+
+        .total {
+
+
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            transition: all 0.3s ease-in-out;
+            width: 100% !important;
+            height: 120px;
+            margin-left: 0 !important;
+            margin-top: 0 !important;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+
+        .entregue {
+            background-color: rgb(25, 135, 84);
+        }
+
+        .teste {
+            width: 100%;
+            height: 50px;
+            background-color: rgb(255, 255, 255);
+            border-radius: 10px;
+            text-align: left;
+
+        }
+
+        .teste h4 {
+            padding-top: 10px;
+            padding-left: 10px;
+            font-weight: bold;
+        }
+
+        .geral {
+            margin-top: 30px;
+        }
+
+        .adicionar {
+            height: 50px;
+            width: 230px;
+            background-color: rgb(0, 51, 255);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            padding: 4px;
+
+            margin-left: 80% !important;
+        }
+
+        .texto {
+            padding-top: 8px;
+
+            margin-left: auto;
+            margin-right: auto;
+
+        }
+
+        .texto i {
+            font-size: 1.4rem;
+            padding-left: 20px;
+            margin-top: -3px !important;
+
+
+        }
+
+        .adicionar:hover {
+            background-color: rgba(1, 40, 194, 0.72);
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            width: 220px;
+            background-color: #333;
+            color: white;
+            position: fixed;
+
+            left: 0;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            padding-top: 20px;
+        }
+
+
+
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .content {
+                margin-left: 0 !important;
+                padding: 60px 15px 15px 15px;
+            }
+
+
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 900;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+
+            }
+
+            .textoVisao {
+                width: 240px !important;
+            }
+
+            .adicionar {
+
+                margin-left: 40% !important;
+            }
+        }
+
+        .textoVisao {
+            width: 240px !important;
+        }
+
+
+        .criar-usuario {
+            border-radius: 10px;
+        }
+
+        .usuarios {
+
+            justify-content: space-between !important;
+        }
+
+        hr {
+            background-color: #cdcdcd8a;
+        }
+
+
+        th {
+            background-color: #6c5ce7;
+            color: white;
+
+        }
+
+        tr:nth-child(even) {
+            background-color: #f5f5ff;
+        }
+
+        tr {
+            background-color: #ffffff;
+            padding: 1px !important;
+
+        }
+
+        tr:hover {
+            background-color: #f0f0ff;
+            cursor: default;
+        }
+
+        th,
+        td {
+            padding: 6px 4px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+
+            text-align: center;
+            overflow: hidden;
+            width: 100%;
+            border: 1px solid #e9ecef;
+
+        }
+
+        table {
+            margin-left: auto;
+            margin-right: auto;
+            width: 100% !important;
+            table-layout: fixed !important;
+            margin-top: 40px;
+        }
+
+        .text-truncate {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
