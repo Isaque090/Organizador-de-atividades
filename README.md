@@ -129,7 +129,7 @@ Exemplo:
 $host = "localhost";
 $user = "root";
 $password = "";
-$database = "organizador";
+$database = "atividades";
 ```
 
 ---
